@@ -33,6 +33,7 @@ define([
         onchangeAction: "",
         allowDeselect: false,
         formOrientation: null,
+        onchangeNanoflow: null,
 
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         _handles: null,
@@ -103,7 +104,7 @@ define([
             this._executeCallback(callback, "_setupWidget");
         },
 
-        resize: function (box) {},
+        resize: function (box) { },
 
         uninitialize: function () {
             if (this._handles) {
@@ -354,7 +355,7 @@ define([
                         })
                     };
 
-                    if (!mx.version || !!mx.version && 7 > parseInt(mx.version.split(".")[ 0 ], 10)) {
+                    if (!mx.version || !!mx.version && 7 > parseInt(mx.version.split(".")[0], 10)) {
                         action.store = {
                             caller: this.mxform,
                         };
@@ -363,6 +364,18 @@ define([
                     }
 
                     mx.data.action(action, this);
+                } else if (!this._isEmptyObject(this.onchangeNanoflow)) {
+                    // execute nanoflow to clear
+                    mx.data.callNanoflow({
+                        nanoflow: this.onchangeNanoflow,
+                        origin: this.mxform,
+                        context: this.mxcontext,
+                        callback: function (result) {
+                        }.bind(this),
+                        error: function (error) {
+                            console.error(error.message);
+                        }
+                    });
                 }
             }));
         },
@@ -372,6 +385,14 @@ define([
             if (cb && typeof cb === "function") {
                 cb();
             }
+        },
+
+        _isEmptyObject: function (obj) {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
         }
     });
 });

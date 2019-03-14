@@ -141,7 +141,10 @@ define([
                 this._contextObj.isReadonlyAttr(this.entity)) {
                 validation.removeAttribute(this.entity);
             } else if (message) {
-                this._addValidation(message);
+                this._addValidationMessage(message);
+                validation.removeAttribute(this.entity);
+            } else {
+                this._addValidation();
                 validation.removeAttribute(this.entity);
             }
         },
@@ -150,24 +153,38 @@ define([
             logger.debug(this.id + "._clearValidations");
             dojoConstruct.destroy(this._alertDiv);
             this._alertDiv = null;
+            if (dojoClass.contains(this.id, "has-error")) {
+                dojoClass.remove(this.id, "has-error");
+            }
         },
 
-        _showError: function (message) {
+        _showError: function () {
             logger.debug(this.id + "._showError");
+            dojoClass.add(this.id, "has-error");
+        },
+
+        _showErrorMessage: function (message) {
+            logger.debug(this.id + "._showError");
+            dojoClass.add(this.id, "has-error");
             if (this._alertDiv !== null) {
                 dojoHtml.set(this._alertDiv, message);
                 return true;
             }
             this._alertDiv = dojoConstruct.create("div", {
-                "class": "alert alert-danger",
+                "class": "text-danger",
                 "innerHTML": message
             });
             dojoConstruct.place(this._alertDiv, this.inputNodes);
         },
 
-        _addValidation: function (message) {
+        _addValidation: function () {
             logger.debug(this.id + "._addValidation");
-            this._showError(message);
+            this._showError();
+        },
+
+        _addValidationMessage: function (message) {
+            logger.debug(this.id + "._addValidationMessage");
+            this._showErrorMessage(message);
         },
 
         _resetSubscriptions: function () {

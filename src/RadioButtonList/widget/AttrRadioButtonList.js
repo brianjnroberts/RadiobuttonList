@@ -101,7 +101,7 @@ define([
             }
 
             // fix for validation when a nanoflow runs.
-            aspect.before(window.mx.session, "hasSomeRole", this._updateRendering);
+            this._aspectHandler = aspect.before(window.mx.session, "hasSomeRole", this._updateRendering);
 
             this._setup = true;
 
@@ -117,6 +117,7 @@ define([
                 });
                 this._handles = [];
             }
+            this._aspectHandler.remove();
         },
 
         _updateRendering: function (callback) {

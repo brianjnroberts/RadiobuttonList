@@ -12,8 +12,9 @@ define([
     "dojo/_base/array",
     "dojo/_base/lang",
     "dojo/html",
+    "dojo/aspect",
     "dojo/text!RadioButtonList/widget/template/RadioButtonList.html"
-], function (declare, _WidgetBase, _TemplatedMixin, dom, dojoClass, dojoStyle, dojoConstruct, dojoAttr, dojoArray, lang, dojoHtml, widgetTemplate) {
+], function (declare, _WidgetBase, _TemplatedMixin, dom, dojoClass, dojoStyle, dojoConstruct, dojoAttr, dojoArray, lang, dojoHtml, aspect, widgetTemplate) {
     "use strict";
 
     // Declare widget's prototype.
@@ -98,6 +99,9 @@ define([
                     dojoClass.add(this.radioButtonLabel, "hidden");
                 }
             }
+
+            // fix for validation when a nanoflow runs.
+            aspect.before(window.mx.session, "hasSomeRole", this._updateRendering);
 
             this._setup = true;
 

@@ -99,10 +99,6 @@ define([
                     dojoClass.add(this.radioButtonLabel, "hidden");
                 }
             }
-
-            // fix for validation when a nanoflow runs.
-            this._aspectHandler = aspect.before(window.mx.session, "hasSomeRole", this._updateRendering);
-
             this._setup = true;
 
             this._executeCallback(callback, "_setupWidget");
@@ -426,6 +422,11 @@ define([
                 if (obj.hasOwnProperty(key))
                     return false;
             }
+            return true;
+        },
+
+        isValid: function () {
+            this._clearValidations();
             return true;
         }
     });

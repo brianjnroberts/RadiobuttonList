@@ -113,7 +113,6 @@ define([
                 });
                 this._handles = [];
             }
-            this._aspectHandler.remove();
         },
 
         _updateRendering: function (callback) {

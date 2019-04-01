@@ -136,23 +136,16 @@ define([
 
             var validation = validations[0],
                 message = validation.getReasonByAttribute(this.entity);
-                
-            var shouldValidate = true;
-            for (var i = 0; i < this.inputNodes.childElementCount; i++) {
-                if (dojoClass.contains(this.inputNodes.children[i], "checked")) {
-                    shouldValidate = false;
-                }
-            }
 
             if (this._isReadOnly ||
                 this._contextObj.isReadonlyAttr(this.entity)) {
                 validation.removeAttribute(this.entity);
-            } else if (shouldValidate) {
+            } else if (typeof message != "undefined") {
                 if (message) {
-                    this._addValidationMessage(message);
+                    this._addValidation(message);
                     validation.removeAttribute(this.entity);
                 } else {
-                    this._addValidation();
+                    this._addValidation(null);
                     validation.removeAttribute(this.entity);
                 }
             }
@@ -170,33 +163,25 @@ define([
             }
         },
 
-        _showError: function () {
+        _showError: function (message) {
             logger.debug(this.id + "._showError");
             dojoClass.add(this.id, "has-error");
-        },
-
-        _showErrorMessage: function (message) {
-            logger.debug(this.id + "._showError");
-            dojoClass.add(this.id, "has-error");
-            if (this._alertDiv !== null) {
-                dojoHtml.set(this._alertDiv, message);
-                return true;
+            if (message != null) {
+                if (this._alertDiv !== null) {
+                    dojoHtml.set(this._alertDiv, message);
+                    return true;
+                }
+                this._alertDiv = dojoConstruct.create("div", {
+                    "class": "text-danger",
+                    "innerHTML": message
+                });
+                dojoConstruct.place(this._alertDiv, this.inputNodes);
             }
-            this._alertDiv = dojoConstruct.create("div", {
-                "class": "text-danger",
-                "innerHTML": message
-            });
-            dojoConstruct.place(this._alertDiv, this.inputNodes);
         },
 
-        _addValidation: function () {
+        _addValidation: function (message) {
             logger.debug(this.id + "._addValidation");
-            this._showError();
-        },
-
-        _addValidationMessage: function (message) {
-            logger.debug(this.id + "._addValidationMessage");
-            this._showErrorMessage(message);
+            this._showError(message);
         },
 
         _resetSubscriptions: function () {

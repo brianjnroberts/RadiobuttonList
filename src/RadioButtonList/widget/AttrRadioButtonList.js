@@ -177,6 +177,7 @@ define([
                 });
                 dojoConstruct.place(this._alertDiv, this.inputNodes);
             }
+            this.mxform.markInvalid();
         },
 
         _addValidation: function (message) {
